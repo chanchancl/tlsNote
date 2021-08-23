@@ -16,13 +16,20 @@
 # in tls, they only use this to verify each other and exchange a key that will used by symmetric encryption
 #
 
+testDir="RsaEncryptTest"
+
 if [ $1 ] && [ $1 = "clean" ]; then
-    rm -rf testRsaEncrypt
+    echo $testDir
+    rm -rf $testDir
     exit
 fi
 
-mkdir testRsaEncrypt
-cd testRsaEncrypt
+if [ ! -d $testDir ]; then
+    mkdir $testDir
+else
+    rm -rf $testDir/*
+fi
+cd $testDir
 
 #
 # generate a RSA private key (from man openssl genrsa, we can known this is a private key)
