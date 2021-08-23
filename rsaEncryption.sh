@@ -26,16 +26,16 @@ cd testRsaEncrypt
 
 #
 # generate a RSA private key (from man openssl genrsa, we can known this is a private key)
-openssl genrsa -out privKey.key 2048
+openssl genrsa -out privKey.pem 2048
 # generate the public key from private key
-openssl rsa -in privKey.key -pubout -out pubKey.key
+openssl rsa -in privKey.pem -pubout -out pubKey.pem
 
 # prepare input file
 echo "test text will be encrypted" > test.txt
 
-# use pubkey to encrypt the file, you can also use certificate key to encrypt
-# but general you will only delivery the pub key to other people who will use it
-openssl rsautl -encrypt -in test.txt -inkey pubKey.key -pubin -out test.en
+# use pubkey to encrypt the file, you will delivery the pub key to the sender
+# who wants to send decrypted data to receiver
+openssl rsautl -encrypt -in test.txt -inkey pubKey.pem -pubin -out test.en
 
-# use certificate key(priv part) to decrypt the file and get plain text
-openssl rsautl -decrypt -in test.en -inkey privKey.key -out test.de.txt
+# use private key to decrypt the file and get plain text
+openssl rsautl -decrypt -in test.en -inkey privKey.pem -out test.de.txt
