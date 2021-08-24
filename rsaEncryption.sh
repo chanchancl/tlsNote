@@ -11,9 +11,9 @@
 #                       |
 # file.en ---------------------------------> file.de.in ( receiver )
 #
-# then sender can send any data to receiver
-# but this process will cost lots of cpu resource
-# in tls, they only use this to verify each other and exchange a key that will used by symmetric encryption
+# 之后 sender 就可以向 receiver 发送加密消息了
+# 但是这个过程非常消耗计算资源
+# 在TLS中，这个过程通常用来验证彼此双方的身份，和交换用于后续对称加密的密钥
 #
 
 testDir="RsaEncryptTest"
@@ -32,17 +32,16 @@ fi
 cd $testDir
 
 #
-# generate a RSA private key (from man openssl genrsa, we can known this is a private key)
+# 生成一个RSA 私钥 (从 man openssl genrsa 可以看出，我们生成的是一个私钥)
 openssl genrsa -out privKey.pem 2048
-# generate the public key from private key
+# 通过私钥计算出公钥
 openssl rsa -in privKey.pem -pubout -out pubKey.pem
 
-# prepare input file
+# 准备明文
 echo "test text will be encrypted" > test.txt
 
-# use pubkey to encrypt the file, you will delivery the pub key to the sender
-# who wants to send decrypted data to receiver
+# 发送者使用公钥加密明文, 你通常需要把公钥发送给想要给你发送密文的人
 openssl rsautl -encrypt -in test.txt -inkey pubKey.pem -pubin -out test.en
 
-# use private key to decrypt the file and get plain text
+# 使用私钥对密文进行解密，并得到明文
 openssl rsautl -decrypt -in test.en -inkey privKey.pem -out test.de.txt
